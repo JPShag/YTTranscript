@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPush
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi
 
+
 class YouTubeTranscriptApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -130,7 +131,11 @@ class YouTubeTranscriptApp(QWidget):
 
     def save_transcripts(self):
         text = self.transcript_display.toPlainText()
-        if text:
+        if not text:
+            QMessageBox.warning(self, 'Error', 'No transcripts to save')
+            return
+
+        try:
             options = QFileDialog.Options()
             options |= QFileDialog.DontUseNativeDialog
             fileName, _ = QFileDialog.getSaveFileName(self, "Save Transcripts", "", "Text Files (*.txt);;All Files (*)", options=options)
@@ -140,8 +145,9 @@ class YouTubeTranscriptApp(QWidget):
                 QMessageBox.information(self, 'Saved', f'Transcripts saved to {fileName}')
             else:
                 QMessageBox.warning(self, 'Cancelled', 'Save operation cancelled')
-        else:
-            QMessageBox.warning(self, 'Error', 'No transcripts to save')
+        except Exception as e:
+            QMessageBox.critical(self, 'Error', str(e))
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

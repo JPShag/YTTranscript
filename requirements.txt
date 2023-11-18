@@ -1,0 +1,4 @@
+PyQt5
+google-api-python-client
+youtube-transcript-api
+python-dotenv
